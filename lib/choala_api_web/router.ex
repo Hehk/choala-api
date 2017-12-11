@@ -5,7 +5,12 @@ defmodule ChoalaApiWeb.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/api", ChoalaApiWeb do
+  scope "/" do
     pipe_through :api
+
+    forward "/graphiql", Absinthe.Plug.GraphiQL,
+      schema: ChoalaApiWeb.Schema,
+      interface: :simple,
+      context: %{pubsub: ChoalaApiWeb.Endpoint}
   end
 end
