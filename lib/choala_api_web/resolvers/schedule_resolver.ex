@@ -6,4 +6,13 @@ defmodule ChoalaApiWeb.ScheduleResolver do
     {:ok, events}
   end
 
+  def create_event(_root, args, _info) do
+    case Schedule.create_event(args) do
+      {:ok, event} ->
+        {:ok, event}
+      _err ->
+        {:error, "Could not create event"}
+    end
+  end
+
 end
