@@ -16,5 +16,6 @@ defmodule ChoalaApi.Accounts.Session do
     session
     |> cast(attrs, [:auth_token, :user_id])
     |> validate_required([:auth_token, :user_id])
+    |> unique_constraint(:user_id)
   end
 end

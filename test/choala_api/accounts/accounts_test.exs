@@ -130,5 +130,10 @@ defmodule ChoalaApi.AccountsTest do
       session = session_fixture()
       assert %Ecto.Changeset{} = Accounts.change_session(session)
     end
+
+    test "find_session/1 returns the session for given key values"  do
+      session = session_fixture()
+      assert session = Accounts.find_session(auth_token: session.auth_token)
+    end
   end
 end

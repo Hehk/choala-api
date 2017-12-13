@@ -197,4 +197,17 @@ defmodule ChoalaApi.Accounts do
   def change_session(%Session{} = session) do
     Session.changeset(session, %{})
   end
+
+  @doc """
+  Returns all sessions that match the options provided
+
+  ## Example 
+
+    iex> find_session(auth_token: auth_token)
+    [%Session{}]
+
+  """
+  def find_session(opts) do
+    Repo.get_by(Session, opts)
+  end
 end
