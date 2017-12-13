@@ -70,13 +70,17 @@ defmodule ChoalaApi.AccountsTest do
   describe "sessions" do
     alias ChoalaApi.Accounts.Session
 
+    @valid_user %{email: "some email", encrypted_password: "some encrypted_password", name: "some name"}
+
     @valid_attrs %{auth_token: "some auth_token"}
     @update_attrs %{auth_token: "some updated auth_token"}
     @invalid_attrs %{auth_token: nil}
 
     def session_fixture(attrs \\ %{}) do
+      user = user_fixture()
       {:ok, session} =
-        attrs
+        %{ user_id: user.id }
+        |> Enum.into(attrs)
         |> Enum.into(@valid_attrs)
         |> Accounts.create_session()
 
@@ -94,7 +98,8 @@ defmodule ChoalaApi.AccountsTest do
     end
 
     test "create_session/1 with valid data creates a session" do
-      assert {:ok, %Session{} = session} = Accounts.create_session(@valid_attrs)
+      user = user_fixture()
+      assert {:ok, %Session{} = session} = %{ user_id: user.id} |> Enum.into(@valid_attrs) |> Accounts.create_session()
       assert session.auth_token == "some auth_token"
     end
 

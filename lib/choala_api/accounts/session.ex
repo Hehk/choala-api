@@ -14,7 +14,7 @@ defmodule ChoalaApi.Accounts.Session do
   @doc false
   def changeset(%Session{} = session, attrs) do
     session
-    |> cast(attrs, [:auth_token])
-    |> validate_required([:auth_token])
+    |> cast(attrs, [:auth_token, :user_id])
+    |> validate_required([:auth_token, :user_id])
   end
 end
