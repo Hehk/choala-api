@@ -102,6 +102,19 @@ defmodule ChoalaApi.Accounts do
     User.changeset(user, %{})
   end
 
+  @doc """
+  Returns a boolean for password validity
+
+  ## Examples
+  
+    iex> verify_password(user, "password")
+    true
+
+  """
+  def verify_password(%User{} = user, password) do
+    Comeonin.Argon2.check_pass(user, password)
+  end
+
   alias ChoalaApi.Accounts.Session
 
   @doc """

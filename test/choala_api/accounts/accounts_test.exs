@@ -6,9 +6,9 @@ defmodule ChoalaApi.AccountsTest do
   describe "users" do
     alias ChoalaApi.Accounts.User
 
-    @valid_attrs %{email: "some email", encrypted_password: "some encrypted_password", name: "some name"}
-    @update_attrs %{email: "some updated email", encrypted_password: "some updated encrypted_password", name: "some updated name"}
-    @invalid_attrs %{email: nil, encrypted_password: nil, name: nil}
+    @valid_attrs %{email: "some email", password: "some password", name: "some name"}
+    @update_attrs %{email: "some updated email", password: "some updated password", name: "some updated name"}
+    @invalid_attrs %{email: nil, password: nil, name: nil}
 
     def user_fixture(attrs \\ %{}) do
       {:ok, user} =
@@ -19,20 +19,24 @@ defmodule ChoalaApi.AccountsTest do
       user
     end
 
+    def user_after_changeset(user) do
+      Map.put(user, :password, nil)
+    end
+
     test "list_users/0 returns all users" do
-      user = user_fixture()
+      user = user_fixture() |> user_after_changeset()
       assert Accounts.list_users() == [user]
     end
 
     test "get_user!/1 returns the user with given id" do
-      user = user_fixture()
+      user = user_fixture() |> user_after_changeset()
       assert Accounts.get_user!(user.id) == user
     end
 
     test "create_user/1 with valid data creates a user" do
       assert {:ok, %User{} = user} = Accounts.create_user(@valid_attrs)
       assert user.email == "some email"
-      assert user.encrypted_password == "some encrypted_password"
+      assert user.encrypted_password != "some password"
       assert user.name == "some name"
     end
 
@@ -41,16 +45,16 @@ defmodule ChoalaApi.AccountsTest do
     end
 
     test "update_user/2 with valid data updates the user" do
-      user = user_fixture()
+      user = user_fixture() |> user_after_changeset()
       assert {:ok, user} = Accounts.update_user(user, @update_attrs)
       assert %User{} = user
       assert user.email == "some updated email"
-      assert user.encrypted_password == "some updated encrypted_password"
+      assert user.encrypted_password != "some updated password"
       assert user.name == "some updated name"
     end
 
     test "update_user/2 with invalid data returns error changeset" do
-      user = user_fixture()
+      user = user_fixture() |> user_after_changeset()
       assert {:error, %Ecto.Changeset{}} = Accounts.update_user(user, @invalid_attrs)
       assert user == Accounts.get_user!(user.id)
     end
@@ -65,12 +69,18 @@ defmodule ChoalaApi.AccountsTest do
       user = user_fixture()
       assert %Ecto.Changeset{} = Accounts.change_user(user)
     end
+
+    test "verify_password/2 returns if password is valid" do
+      user = user_fixture()
+      assert Accounts.verify_password(user, "some updated password")
+      assert Accounts.verify_password(user, "This is wrong")
+    end
   end
 
   describe "sessions" do
     alias ChoalaApi.Accounts.Session
 
-    @valid_user %{email: "some email", encrypted_password: "some encrypted_password", name: "some name"}
+    # @valid_user %{email: "some email", password: "some password", name: "some name"}
 
     @valid_attrs %{auth_token: "some auth_token"}
     @update_attrs %{auth_token: "some updated auth_token"}
@@ -133,7 +143,7 @@ defmodule ChoalaApi.AccountsTest do
 
     test "find_session/1 returns the session for given key values"  do
       session = session_fixture()
-      assert session = Accounts.find_session(auth_token: session.auth_token)
+      assert session == Accounts.find_session(auth_token: session.auth_token)
     end
   end
 end

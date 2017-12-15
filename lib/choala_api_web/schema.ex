@@ -35,5 +35,13 @@ defmodule ChoalaApiWeb.Schema do
 
       resolve &ScheduleResolver.create_event/3
     end
+
+    field :create_user, :user do
+      arg :email, non_null(:string)
+      arg :name, non_null(:string)
+      arg :password, non_null(:string)
+
+      resolve &AccountResolver.create_user/3
+    end
   end
 end
