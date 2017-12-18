@@ -33,6 +33,11 @@ defmodule ChoalaApi.AccountsTest do
       assert Accounts.get_user!(user.id) == user
     end
 
+    test "get_by/1 returns the user based on options" do
+      user = user_fixture() |> user_after_changeset()
+      assert Accounts.get_by(email: user.email) == user
+    end
+
     test "create_user/1 with valid data creates a user" do
       assert {:ok, %User{} = user} = Accounts.create_user(@valid_attrs)
       assert user.email == "some email"
@@ -72,8 +77,8 @@ defmodule ChoalaApi.AccountsTest do
 
     test "verify_password/2 returns if password is valid" do
       user = user_fixture()
-      assert Accounts.verify_password(user, "some updated password")
-      assert Accounts.verify_password(user, "This is wrong")
+      assert Accounts.verify_password(user, @valid_attrs.password) == true
+      assert Accounts.verify_password(user, "This is wrong") == false
     end
   end
 
@@ -144,6 +149,13 @@ defmodule ChoalaApi.AccountsTest do
     test "find_session/1 returns the session for given key values"  do
       session = session_fixture()
       assert session == Accounts.find_session(auth_token: session.auth_token)
+    end
+
+    test "new_session/1 returns a new session for a user_id" do
+      session = session_fixture()
+      {:ok, new_session} = Accounts.new_session(session.user_id)
+      assert session.user_id == new_session.user_id
+      assert session.auth_token != new_session.auth_token
     end
   end
 end

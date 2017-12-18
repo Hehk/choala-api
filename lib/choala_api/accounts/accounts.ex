@@ -112,7 +112,23 @@ defmodule ChoalaApi.Accounts do
 
   """
   def verify_password(%User{} = user, password) do
-    Comeonin.Argon2.check_pass(user, password)
+    case Comeonin.Argon2.check_pass(user, password) do
+      {:ok, _user} -> true
+      {:error, _error} -> false
+    end
+  end
+
+  @doc """
+  Return a user based on options
+
+  ## Examples
+    
+    iex> get_by!(email: "best@email.com")
+    %User{}
+
+  """
+  def get_by(opts) do
+    Repo.get_by(User, opts)
   end
 
   alias ChoalaApi.Accounts.Session
@@ -222,5 +238,15 @@ defmodule ChoalaApi.Accounts do
   """
   def find_session(opts) do
     Repo.get_by(Session, opts)
+  end
+
+  @doc """
+  Returns a new session, either updates a session or creates a new one if none exists
+  """
+  def new_session(user_id) do
+    case find_session(user_id: user_id) do
+      nil -> create_session(%{user_id: user_id, auth_token: "test #{user_id}"})
+      session -> update_session(session, %{auth_token: "test #{user_id}"})
+    end
   end
 end

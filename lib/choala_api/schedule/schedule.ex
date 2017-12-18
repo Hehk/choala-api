@@ -17,8 +17,10 @@ defmodule ChoalaApi.Schedule do
       [%Event{}, ...]
 
   """
-  def list_events do
-    Repo.all(Event)
+  def list_events(opts \\ []) do
+    Event
+    |> Ecto.Query.where(^opts)
+    |> Repo.all()
   end
 
   @doc """

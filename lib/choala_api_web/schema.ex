@@ -17,6 +17,10 @@ defmodule ChoalaApiWeb.Schema do
     field :name, non_null(:string)
   end
 
+  object :session do
+    field :auth_token, :string
+  end
+
   query do
     field :all_events, non_null(list_of(non_null(:event))) do
       resolve &ScheduleResolver.all_events/3
@@ -24,6 +28,13 @@ defmodule ChoalaApiWeb.Schema do
 
     field :user, :user do
       resolve &AccountResolver.user/2
+    end
+
+    field :login, :session do
+      arg :email, non_null(:string)
+      arg :password, non_null(:string)
+
+      resolve &AccountResolver.login/3
     end
   end
 

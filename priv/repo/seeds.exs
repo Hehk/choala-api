@@ -14,10 +14,11 @@ alias ChoalaApi.Repo
 
 
 alias ChoalaApi.Accounts.User
+alias ChoalaApi.Accounts
 user_1 = %User{email: "john@appleseed.com", encrypted_password: "password", name: "John Appleseed"}
 user_2 = %User{email: "kyle@henderson.com", encrypted_password: "secret", name: "Kyle Henderson"}
-Repo.insert!(user_1)
-Repo.insert!(user_2)
+Accounts.create_user(user_1)
+Accounts.create_user(user_2)
 
 alias ChoalaApi.Accounts.Session
 %Session{auth_token: "1", user_id: user_1.id} |> Repo.insert!
