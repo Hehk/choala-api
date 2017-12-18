@@ -8,12 +8,17 @@ defmodule ChoalaApi.ScheduleTest do
 
     @valid_attrs %{mutable: true, name: "some name", period: 42}
     @update_attrs %{mutable: false, name: "some updated name", period: 43}
-    @invalid_attrs %{mutable: nil, name: nil, period: nil}
+    @invalid_attrs %{mutable: nil, name: nil, period: nil, user_id: nil}
 
     def event_fixture(attrs \\ %{}) do
+      {:ok, user} =
+        attrs |> Enum.into(%{email: "some email", password: "some password", name: "some name"})
+        |> ChoalaApi.Accounts.create_user()
+
       {:ok, event} =
         attrs
         |> Enum.into(@valid_attrs)
+        |> Enum.into(%{user_id: user.id})
         |> Schedule.create_event()
 
       event
@@ -30,7 +35,11 @@ defmodule ChoalaApi.ScheduleTest do
     end
 
     test "create_event/1 with valid data creates a event" do
-      assert {:ok, %Event{} = event} = Schedule.create_event(@valid_attrs)
+      {:ok, user} =
+        %{email: "some email", password: "some password", name: "some name"}
+        |> ChoalaApi.Accounts.create_user()
+
+      assert {:ok, %Event{} = event} = Schedule.create_event(@valid_attrs |> Enum.into(%{user_id: user.id}))
       assert event.mutable == true
       assert event.name == "some name"
       assert event.period == 42
