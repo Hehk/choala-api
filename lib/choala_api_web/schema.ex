@@ -54,5 +54,13 @@ defmodule ChoalaApiWeb.Schema do
 
       resolve &AccountResolver.create_user/3
     end
+
+    field :sign_up, :session do
+      arg :email, non_null(:string)
+      arg :name, non_null(:string)
+      arg :password, non_null(:string)
+
+      resolve &AccountResolver.sign_up/3
+    end
   end
 end

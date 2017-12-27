@@ -10,8 +10,8 @@ defmodule ChoalaApiWeb.AccountResolver do
 
   def create_user(_root, args, _context) do
     case Accounts.create_user(args) do
-      {:ok, event} ->
-        {:ok, event}
+      {:ok, user} ->
+        {:ok, user}
       _err ->
         {:error, "Could not create user"}
     end
@@ -19,7 +19,6 @@ defmodule ChoalaApiWeb.AccountResolver do
 
   def login(_root, args, _context) do
     user = Accounts.get_by(email: args.email)
-    IO.inspect user
     with (%User{} = user) <- Accounts.get_by(email: args.email),
          true <- Accounts.verify_password(user, args.password),
          {:ok, %Session{auth_token: auth_token}} <- Accounts.new_session(user.id)
@@ -28,6 +27,18 @@ defmodule ChoalaApiWeb.AccountResolver do
     else
       nil -> {:error, "invalid login"}
       _ -> {:error, "invalid login"}
+    end
+  end
+
+  def sign_up(_root, args, _context) do
+    with {:ok, user} <- Accounts.create_user(args),
+         {:ok, session} <- Accounts.new_session(user.id)
+    do
+      {:ok, %{auth_token: session.auth_token}}
+    else
+      nil -> {:error, "invalid sign up"}
+      {:error, changeset} -> {:error, "invalid user details"}
+      _   -> {:error, "invalid sign up"}
     end
   end
 
