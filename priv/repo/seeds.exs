@@ -15,8 +15,8 @@ alias ChoalaApi.Repo
 
 alias ChoalaApi.Accounts.User
 alias ChoalaApi.Accounts
-user_1 = %User{email: "john@appleseed.com", encrypted_password: "password", name: "John Appleseed"}
-user_2 = %User{email: "kyle@henderson.com", encrypted_password: "secret", name: "Kyle Henderson"}
+user_1 = %User{email: "john@appleseed.com", password: "password", name: "John Appleseed"}
+user_2 = %User{email: "kyle@henderson.com", password: "secret", name: "Kyle Henderson"}
 Accounts.create_user(user_1)
 Accounts.create_user(user_2)
 
