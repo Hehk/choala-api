@@ -9,8 +9,7 @@ defmodule ChoalaApiWeb.Router do
   scope "/" do
     pipe_through :api
 
-    forward "/", Absinthe.Plug,
-      schema: ChoalaApiWeb.Schema
+    forward "/", Absinthe.Plug, schema: ChoalaApiWeb.Schema
 
     forward "/graphiql", Absinthe.Plug.GraphiQL,
       schema: ChoalaApiWeb.Schema,

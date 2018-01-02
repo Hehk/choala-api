@@ -36,6 +36,7 @@ defmodule ChoalaApiWeb.Endpoint do
     key: "_choala_api_key",
     signing_salt: "9w9TF1/t"
 
+  plug CORSPlug
   plug ChoalaApiWeb.Router
 
   @doc """

@@ -42,7 +42,8 @@ defmodule ChoalaApi.Mixfile do
       {:absinthe_ecto, "~> 0.1.0"},
       {:absinthe_plug, "~> 1.3.0"},
       {:comeonin, "~> 4.0"},
-      {:argon2_elixir, "~> 1.2"}
+      {:argon2_elixir, "~> 1.2"},
+      {:cors_plug, "~> 1.2"}
     ]
   end
 

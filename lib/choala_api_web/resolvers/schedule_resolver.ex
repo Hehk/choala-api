@@ -2,8 +2,12 @@ defmodule ChoalaApiWeb.ScheduleResolver do
   alias ChoalaApi.Schedule
 
   def all_events(_root, _args, %{context: %{user_id: user_id}}) do
+    IO.puts("hello")
     events = Schedule.list_events(user_id: user_id)
     {:ok, events}
+  end
+  def all_events(_root, _args, _context) do
+    {:ok, []}
   end
 
   def create_event(_root, args, %{context: %{user_id: user_id}}) do

@@ -5,6 +5,7 @@ defmodule ChoalaApiWeb.Context do
 
   def init(opts), do: opts
   def call(conn, _) do
+    IO.inspect(conn)
     case build_context(conn) do
       {:ok, context} ->
         put_private(conn, :absinthe, %{context: context})
